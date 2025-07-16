@@ -2,11 +2,11 @@ from scholarly import scholarly
 import pandas as pd
 import time
 import openpyxl
-
+import os
 
 
 # Executa a busca e limita o número de resultados
-query = artigos_encontrados = scholarly.search_pubs("ergonomia em TI LER") # Insira as palavras-chave desejadas
+query = artigos_encontrados = scholarly.search_pubs('"task automation" AND "ergonomics"') # Insira as palavras-chave desejadas
 
 # Exibir resultados dentro do intervalo temporal desejado
 resultados = []
@@ -17,8 +17,13 @@ def to_xlsx(x): # Função para salvar os resultados em um arquivo Excel
     if x:
         df = pd.DataFrame(x)
         nome_arquivo = input("Digite o nome do arquivo (sem extensão): ")
-        df.to_excel(f"{nome_arquivo}.xlsx", index=False, engine='openpyxl')
-        print(f"Os resultados foram salvos em {nome_arquivo}.xlsx")
+        
+        #substitua pelo caminho da pasta onde deseja salvar o arquivo
+        caminho = os.path.join(r"Caminha da pasta de destino", f"{nome_arquivo}.xlsx") 
+        df.to_excel(caminho, index=False, engine='openpyxl')
+        print(f"Os resultados foram salvos em {caminho}")
+    else:
+        print("Nenhum resultado encontrado para salvar.")
 
             
         
@@ -28,7 +33,7 @@ for i, artigo in enumerate(artigos_encontrados):
         
         break  # Sai do loop após 20 artigos
     
-    time.sleep(3)
+    time.sleep(2)  # Pausa de 2 segundos entre as requisições para evitar bloqueios 
     
     pub_year = artigo.get('pub_year', '0')  
     try:
